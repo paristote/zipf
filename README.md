@@ -1,6 +1,13 @@
 # ZIPF
 
-Run the Python program and enter a Git repository to analyze its _Zipfness_.
+Enter a Git repository to analyze its _Zipfness_.
+
+* Run the program with `python zipf.py`
+* Open your browser to `http://localhost:5000`
+* Enter a GitHub repository
+* View the results
+
+!(https://raw.githubusercontent.com/paristote/zipf/master/static/results.png)
 
 # Zipf's Law
 	
@@ -14,8 +21,8 @@ Zipf's law states that given some corpus of natural language utterances, the fre
 What you need prior to running this program:
 
 * Python v2.7+
-* pip
-* Flask library
+* `pip`
+* `Flask` library
  
 # License
 
