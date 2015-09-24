@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>ZIPF</title>
+		<script type="text/javascript" src="/static/flot/jquery.js"></script>
+		<script type="text/javascript" src="/static/flot/jquery.flot.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var placeholder = $("#placeholder");
+
+				var options = {
+					    series: {
+					        lines: { show: true },
+					        points: { show: true }
+					    },
+					    grid: {
+					    	hoverable: true
+					    }
+				};
+
+				var words = [];
+				var numbers = [];
+				var zipf = [];
+				var base = {{ result[0][1] }};
+				{% for word in result %}
+					words.push("{{ word[0] }}");
+					numbers.push([{{ loop.index }} , {{ word[1] }}]);
+					zipf.push([{{ loop.index }} , base / {{ loop.index }}])
+				{% endfor %}
+				var data = [
+					{ data: numbers, label: "Nb of occurrences" },
+					{ data: zipf, label: "Zipf's number" }
+				];
+				var plot = $.plot(placeholder, data, options);
+
+				$("<div id='tooltip'></div>").css({
+					position: "absolute",
+					display: "none",
+					border: "1px solid #fdd",
+					padding: "2px",
+					"background-color": "#fee",
+					opacity: 0.80
+				}).appendTo("body");
+
+				$("#placeholder").bind("plothover", function (event, pos, item) {
+					if (item) {
+						var word = words[item.datapoint[0]];
+						var number = item.datapoint[1].toFixed(2);
+						$("#tooltip").html(word+" ("+number+")")
+							.css({top: item.pageY+5, left: item.pageX+5})
+							.fadeIn(200);
+					} else {
+						$("#tooltip").hide();
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		{% if result %}
+			<h1>Here are your results</h1>
+			<div id="placeholder" style="width:800px;height:400px"></div>
+			<h1>Details</h1>
+			<p>
+				<table>
+					<thead>
+						<tr>
+						<td>Word</td>
+						<td># occurrences</td>
+						</tr>
+					</thead>
+					<tbody>
+				{% for word in result %}
+						<tr>
+						<td>
+							{{ word[0] }}
+						</td>
+						<td>
+							{{ word[1] }}
+						</td>
+						</tr>
+				{% endfor %}
+					</tbody>
+				</table>
+			</p>
+		{% else %}
+			<h1>Nothing to show</h1>
+		{% endif %}
+		<p>
+			<a href="/">Try again</a>
+		</p>
+	</body>
+</html>

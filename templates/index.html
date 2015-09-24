@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>ZIPF</title>
+		<style type="text/css">
+			body {
+				width: 500px;
+			}
+			.github {
+				display: inline;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>ZIPF</h1>
+		<p>
+			Enter a Git repository to analyze its <em>Zipfness</em>.
+			<form method="POST" action="{{ url_for('zipf') }}">
+				<pre class="github">https://github.com/</pre>
+				<input type="text" name="orga" placeholder="paristote" />
+				<pre class="github">/</pre>
+				<input type="text" name="repo" placeholder="youcast-android" />
+				<pre class="github">.git</pre>
+				<br/><br/>
+				<button type="submit">ZIPF ME</button>
+			</form>
+		</p>
+		<h1>Zipf's Law</h1>
+		<p>
+			Zipf's law states that given some corpus of natural language utterances, the frequency of any word is inversely proportional to its rank in the frequency table. Thus the most frequent word will occur approximately twice as often as the second most frequent word, three times as often as the third most frequent word, etc.
+		</p>
+		<p>
+			<a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipf's law on Wikipedia</a><br/>
+			<a href="https://www.youtube.com/watch?v=fCn8zs912OE">Zips's law by Vsauce</a>
+		</p>
+	</body>
+</html>
