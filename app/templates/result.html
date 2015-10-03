@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>ZIPF</title>
+		<script type="text/javascript" src="/static/flot/jquery.min.js"></script>
+		<script type="text/javascript" src="/static/flot/jquery.flot.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				// The element where the graph will be drawn
+				var placeholder = $("#placeholder");
+				// Set of options for the graph
+				var options = {
+					    series: {
+					        lines: { show: true },
+					        points: { show: true }
+					    },
+					    grid: {
+					    	hoverable: true
+					    }
+				};
+				// Array of words (ordered by nb occurrences desc)
+				var words = [];
+				// Array of word occurrences (ordered dec)
+				var numbers = [];
+				// Array of theoretical Zipf number
+				var zipf = [];
+				// Number of occurrences of the most common word
+				var base = {{ result[0][1] }};
+				// For each tuple (word, occurrences), add the tuple's values
+				// in the corresponding array
+				{% for tuple in result %}
+					words.push("{{ tuple[0] }}");
+					numbers.push([{{ loop.index }} , {{ tuple[1] }}]);
+					zipf.push([{{ loop.index }} , base / {{ loop.index }}])
+				{% endfor %}
+				// Data object for the graph
+				var data = [
+					{ data: zipf, label: "Zipf's number" },
+					{ data: numbers, label: "Words" }
+				];
+				// Draw the graph
+				var plot = $.plot(placeholder, data, options);
+
+				$("<div id='tooltip'></div>").css({
+					position: "absolute",
+					display: "none",
+					border: "1px solid #fdd",
+					padding: "2px",
+					"background-color": "#fee",
+					opacity: 0.80
+				}).appendTo("body");
+
+				$("#placeholder").bind("plothover", function (event, pos, item) {
+					if (item) {
+						var word = words[item.dataIndex];
+						var number = item.datapoint[1];
+						// Display only the number by default
+						var label = Math.round(number);
+						if (item.seriesIndex==1) {
+							// Display word + number only for the real chart
+							label = word+" ("+number+")";
+						}
+						$("#tooltip").html(label)
+							.css({top: item.pageY+5, left: item.pageX+5})
+							.fadeIn(200);
+					} else {
+						$("#tooltip").hide();
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		{% if result %}
+			<h1>Here are your results</h1>
+			<div id="placeholder" style="width:800px;height:400px"></div>
+			<h1>Details</h1>
+			<p>
+				<table>
+					<thead>
+						<tr>
+						<td>Word</td>
+						<td># occurrences</td>
+						</tr>
+					</thead>
+					<tbody>
+				{% for word in result %}
+						<tr>
+						<td>
+							{{ word[0] }}
+						</td>
+						<td>
+							{{ word[1] }}
+						</td>
+						</tr>
+				{% endfor %}
+					</tbody>
+				</table>
+			</p>
+		{% else %}
+			<h1>Nothing to show</h1>
+		{% endif %}
+		<p>
+			<a href="/">Try again</a>
+		</p>
+	</body>
+</html>

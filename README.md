@@ -7,7 +7,7 @@ Enter a Git repository to analyze its _Zipfness_.
 * Enter a GitHub repository
 * View the results
 
-![Results](static/results.png)
+![Results](gh-images/results.png)
 
 # Zipf's Law
 	
