@@ -6,8 +6,9 @@
 		<script type="text/javascript" src="/static/flot/jquery.flot.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
+				// The element where the graph will be drawn
 				var placeholder = $("#placeholder");
-
+				// Set of options for the graph
 				var options = {
 					    series: {
 					        lines: { show: true },
@@ -17,20 +18,27 @@
 					    	hoverable: true
 					    }
 				};
-
+				// Array of words (ordered by nb occurrences desc)
 				var words = [];
+				// Array of word occurrences (ordered dec)
 				var numbers = [];
+				// Array of theoretical Zipf number
 				var zipf = [];
+				// Number of occurrences of the most common word
 				var base = {{ result[0][1] }};
-				{% for word in result %}
-					words.push("{{ word[0] }}");
-					numbers.push([{{ loop.index }} , {{ word[1] }}]);
+				// For each tuple (word, occurrences), add the tuple's values
+				// in the corresponding array
+				{% for tuple in result %}
+					words.push("{{ tuple[0] }}");
+					numbers.push([{{ loop.index }} , {{ tuple[1] }}]);
 					zipf.push([{{ loop.index }} , base / {{ loop.index }}])
 				{% endfor %}
+				// Data object for the graph
 				var data = [
-					{ data: numbers, label: "Nb of occurrences" },
-					{ data: zipf, label: "Zipf's number" }
+					{ data: zipf, label: "Zipf's number" },
+					{ data: numbers, label: "Words" }
 				];
+				// Draw the graph
 				var plot = $.plot(placeholder, data, options);
 
 				$("<div id='tooltip'></div>").css({
@@ -44,9 +52,15 @@
 
 				$("#placeholder").bind("plothover", function (event, pos, item) {
 					if (item) {
-						var word = words[item.datapoint[0]];
-						var number = item.datapoint[1].toFixed(2);
-						$("#tooltip").html(word+" ("+number+")")
+						var word = words[item.dataIndex];
+						var number = item.datapoint[1];
+						// Display only the number by default
+						var label = Math.round(number);
+						if (item.seriesIndex==1) {
+							// Display word + number only for the real chart
+							label = word+" ("+number+")";
+						}
+						$("#tooltip").html(label)
 							.css({top: item.pageY+5, left: item.pageX+5})
 							.fadeIn(200);
 					} else {
