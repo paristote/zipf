@@ -2,33 +2,80 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>ZIPF</title>
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+		<link rel="stylesheet" type="text/css" href="/static/normalize.css">
+		<link rel="stylesheet" type="text/css" href="/static/foundation.min.css">
 		<link rel="stylesheet" type="text/css" href="/static/zipf.css">
 	</head>
-	<body>
-		<h1>ZIPF</h1>
-		<p>
-			Enter a Git repository to analyze its <em>Zipfness</em>.
-			<form method="POST" action="{{ url_for('zipf') }}">
-				<pre class="github">https://github.com/</pre>
-				<input type="text" name="orga" placeholder="paristote" />
-				<pre class="github">/</pre>
-				<input type="text" name="repo" placeholder="youcast-android" />
-				<pre class="github">.git</pre>
-				<br/>
-				{% if error=='10' or error=='11' %}
-				<p class="error">Please enter a valid GitHub organization and repository</p>
-				{% endif %}
-				<br/>
-				<button type="submit">ZIPF ME</button>
-			</form>
-		</p>
-		<h1>Zipf's Law</h1>
-		<p>
-			Zipf's law states that given some corpus of natural language utterances, the frequency of any word is inversely proportional to its rank in the frequency table. Thus the most frequent word will occur approximately twice as often as the second most frequent word, three times as often as the third most frequent word, etc.
-		</p>
-		<p>
-			<a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipf's law on Wikipedia</a><br/>
-			<a href="https://www.youtube.com/watch?v=fCn8zs912OE">Zips's law by Vsauce</a>
-		</p>
+	<body id="home">
+		<div class="row">
+			<h3>ZIPF</h3>
+        	<div class="large-12 columns">
+        		<p class="text-justify">
+				Zipf's law states that given some corpus of natural language utterances, the frequency of any word is inversely proportional to its rank in the frequency table. Thus the most frequent word will occur approximately twice as often as the second most frequent word, three times as often as the third most frequent word, etc.
+				<ul>
+					<li><a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipf's law on Wikipedia</a></li>
+					<li><a href="https://www.youtube.com/watch?v=fCn8zs912OE">Zips's law by Vsauce</a></li>
+				</ul>
+				</p>
+        	</div>
+        	<hr/>
+      	</div>
+		<div class="row">
+			<h3>EXAMPLES</h3>
+        	<div class="large-4 columns">
+        		<a href="/result/function%3D17322%26the%3D13084%26expect%3D11678%26var%3D10671%26https%3D8059%26if%3D7173%26to%3D6940%26return%3D6162%26it%3D5713%26should%3D5006%26mm%3D4965%26is%3D4575%26version%3D4246%26for%3D4210%26in%3D3728%26and%3D3605%26element%3D3444%26of%3D3437%26ss%3D3012%26from%3D3007%26value%3D2843%26name%3D2515%26PLURAL%3D2421%26SEP%3D2395%26opt%3D2328%26that%3D2239%26true%3D2236%26MMMM%3D2230%26HH%3D2198%26with%3D2114%26resolved%3D2107%26inject%3D2104%26be%3D2080%26obj%3D2047%26not%3D2031%26use%3D1921%26when%3D1866%26precision%3D1828%26endobj%3D1827%26PATTERN%3D1789%26an%3D1711%26on%3D1681%26DECIMAL%3D1648%26CURRENCY%3D1644%26as%3D1530%26FORMATS%3D1508%26locale%3D1507%26maxFrac%3D1493%26negPre%3D1492%26minInt%3D1492">
+          			<img src="http://placehold.it/300x300"/>
+          			<h4 class="text-center">angular.js</h4>
+          		</a>
+        	</div>
+        	<div class="large-4 columns">
+        		<a href="">
+          			<img src="http://placehold.it/300x300"/>
+          			<h4 class="text-center">elasticsearch</h4>
+          		</a>
+        	</div>
+        	<div class="large-4 columns">
+        		<a href="">
+          			<img src="http://placehold.it/300x300"/>
+          			<h4 class="text-center">rails</h4>
+          		</a>
+        	</div>
+        	<hr/>
+        </div>
+		<div class="row">
+			<h3>TRY IT YOURSELF</h3>
+			<div class="large-12 columns">
+				<p>
+					Enter a GitHub repository to analyze its <em>Zipfness</em>.
+					<form method="POST" action="{{ url_for('zipf') }}">
+						<div class="row">
+        					<div class="small-3 columns">
+          						<label class="inline">https://github.com/</label>
+        					</div>
+        					<div class="small-3 columns">
+        	  					<input type="text" name="orga" placeholder="paristote">
+        	  				</div>
+        	  				<div class="small-1 columns">
+        	  					<label class="inline text-center">/</label>
+        	  				</div>
+        	  				<div class="small-3 columns">
+        	  					<input type="text" name="repo" placeholder="youcast-android">
+        					</div>
+        					<div class="small-1 columns">
+        	  					<label class="inline">.git</label>
+        	  				</div>
+      					</div>
+						{% if error=='10' or error=='11' %}
+						<div class="row">
+							<small class="error">Please enter a valid GitHub organization and repository</small>
+						</div>
+						{% endif %}
+						<br/>
+						<button type="submit">ZIPF IT</button>
+					</form>
+				</p>
+			</div>
+		</div>
 	</body>
 </html>

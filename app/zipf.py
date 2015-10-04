@@ -64,13 +64,13 @@ def zipf():
 
 	# Transform the words dic into key=value url query string
 	words=urllib.urlencode(mostCommon)
-	return redirect(url_for("result", words=words))
+	return redirect(url_for("result", orga=orga, repo=repo, words=words))
 
-@app.route("/result/<words>")
-def result(words):
+@app.route("/result/<orga>/<repo>/<words>")
+def result(orga, repo, words):
 	# Transform the query string back into a dictionary of tuples (word, occurrences)
 	result=urlparse.parse_qsl(words)
-	return render_template("result.html", result=result)
+	return render_template("result.html", orga=orga, repo=repo, result=result)
 
 @app.route("/error/<err>")
 def error(err):
@@ -117,7 +117,7 @@ def countWordsInFile(fileName, wc):
 				words=re.split(WORD_SEPARATOR, line)
 				for word in words:
 					if isValid(word):
-						wc[word]+=1
+						wc[word.lower()]+=1
 
 # Print a debug log message
 def logd(message):

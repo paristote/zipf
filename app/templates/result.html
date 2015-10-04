@@ -4,6 +4,10 @@
 		<title>ZIPF</title>
 		<script type="text/javascript" src="/static/flot/jquery.min.js"></script>
 		<script type="text/javascript" src="/static/flot/jquery.flot.min.js"></script>
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+		<link rel="stylesheet" type="text/css" href="/static/normalize.css">
+		<link rel="stylesheet" type="text/css" href="/static/foundation.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/zipf.css">
 		<script type="text/javascript">
 			$(document).ready(function() {
 				// The element where the graph will be drawn
@@ -35,8 +39,8 @@
 				{% endfor %}
 				// Data object for the graph
 				var data = [
-					{ data: zipf, label: "Zipf's number" },
-					{ data: numbers, label: "Words" }
+					{ data: zipf, label: "Zipf projection" },
+					{ data: numbers, label: "{{ orga }}/{{ repo }}" }
 				];
 				// Draw the graph
 				var plot = $.plot(placeholder, data, options);
@@ -70,28 +74,30 @@
 			});
 		</script>
 	</head>
-	<body>
+	<body id="result">
 		{% if result %}
-			<h1>Here are your results</h1>
+			<h3>Zipf distribution of {{ orga }}/{{ repo }}</h3>
 			<div id="placeholder" style="width:800px;height:400px"></div>
-			<h1>Details</h1>
+			<p>
+				<a href="/">Try again</a>
+			</p>
+			<h3>Details</h3>
+			<p>GitHub: <a href="https://github.com/{{ orga }}/{{ repo }}" target="_blank">{{ orga }}/{{ repo }}</a></p>
 			<p>
 				<table>
 					<thead>
 						<tr>
-						<td>Word</td>
-						<td># occurrences</td>
+							<td>Rank</td>
+							<td>Word</td>
+							<td>Number of occurrences</td>
 						</tr>
 					</thead>
 					<tbody>
 				{% for word in result %}
 						<tr>
-						<td>
-							{{ word[0] }}
-						</td>
-						<td>
-							{{ word[1] }}
-						</td>
+							<td>#{{ loop.index }}</td>
+							<td>{{ word[0] }}</td>
+							<td>{{ word[1] }}</td>
 						</tr>
 				{% endfor %}
 					</tbody>
@@ -100,8 +106,5 @@
 		{% else %}
 			<h1>Nothing to show</h1>
 		{% endif %}
-		<p>
-			<a href="/">Try again</a>
-		</p>
 	</body>
 </html>

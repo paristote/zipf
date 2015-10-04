@@ -1,9 +1,9 @@
-body {
-	width: 500px;
+body#home {
+	width: 600px;
+	padding: 5px;
 }
-.github {
-	display: inline;
-}
-.error {
-	color: red;
+
+body#result {
+	padding: 5px;
+	margin: 5px;
 }
