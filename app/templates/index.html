@@ -9,6 +9,9 @@
 			.github {
 				display: inline;
 			}
+			.error {
+				color: red;
+			}
 		</style>
 	</head>
 	<body>
@@ -21,7 +24,11 @@
 				<pre class="github">/</pre>
 				<input type="text" name="repo" placeholder="youcast-android" />
 				<pre class="github">.git</pre>
-				<br/><br/>
+				<br/>
+				{% if error=='10' or error=='11' %}
+				<p class="error">Please enter a valid GitHub organization and repository</p>
+				{% endif %}
+				<br/>
 				<button type="submit">ZIPF ME</button>
 			</form>
 		</p>

@@ -23,6 +23,10 @@ VALID_WORD_PATTERN=re.compile('^[a-zA-Z]{2,}$')
 # Pattern to separate words in a line: any of : _ = ' " ( ) and whitespace chars
 WORD_SEPARATOR=re.compile('[:_=\'"\s\(\)]')
 
+# Error codes
+ERR_EMPTY_ORGA_REPO=10
+ERR_ORGA_REPO_DONT_EXIST=11
+
 # Routes
 
 @app.route("/")
@@ -31,20 +35,33 @@ def home():
 
 @app.route("/zipf", methods=['POST'])
 def zipf():
+	# Prepare variables
 	orga=request.form['orga']
 	repo=request.form['repo']
+	logd("GitHub organization: "+orga)
+	logd("GitHub repository  : "+repo)
+	if len(orga) == 0 or len(repo) == 0 :
+		return redirect(url_for("error", err=ERR_EMPTY_ORGA_REPO))
+
 	gitUrl="https://github.com/{0}/{1}.git".format(orga, repo)
 	cloneFolder="{0}/{1}/{2}".format(TEMP_FOLDER, orga, repo)
+
 	# Clone the repository
-	gitExport(gitUrl, cloneFolder)
+	gitCloneSuccess=gitExport(gitUrl, cloneFolder)
+	if not gitCloneSuccess:
+		return redirect(url_for("error", err=ERR_ORGA_REPO_DONT_EXIST))
+
 	# Get the list of all files in the repository
 	files=walkProject(cloneFolder)
+
 	# Count each word occurrences
 	wordCount=WordCounter()
 	for f in files:
 		countWordsInFile(f, wordCount)
+
 	# Keep only the top 50 words and order them desc
 	mostCommon=collections.Counter(wordCount).most_common(50)
+
 	# Transform the words dic into key=value url query string
 	words=urllib.urlencode(mostCommon)
 	return redirect(url_for("result", words=words))
@@ -55,16 +72,28 @@ def result(words):
 	result=urlparse.parse_qsl(words)
 	return render_template("result.html", result=result)
 
+@app.route("/error/<err>")
+def error(err):
+	return render_template("index.html", error=err)
+
 # ZIPF
 
 # Clone the GitHub repo and delete all .git folders
-# Skip if the destination folder already exists
+# Return False if the git command failed
+# Return True otherwise, eg if the destination folder already exists
 def gitExport(gitUrl, cloneFolder):
 	if os.path.exists(cloneFolder):
-		return
-
-	subprocess.check_call(["git", "clone", "-q", "--depth=1", gitUrl, cloneFolder])
-	subprocess.check_call(["rm", "-rf", cloneFolder+"/.git"])
+		return True
+	try:
+		subprocess.check_call(["git", "clone", "-q", "--depth=1", gitUrl, cloneFolder])
+	except subprocess.CalledProcessError as cpe:
+		logd("Command failed "+str(cpe.cmd))
+		return False
+	try:
+		subprocess.check_call(["rm", "-rf", cloneFolder+"/.git"])
+	except subprocess.CalledProcessError as cpe:
+		logd("Command failed "+str(cpe.cmd))
+	return True
 
 # True if the given string is a valid word
 def isValid(word):
@@ -89,6 +118,11 @@ def countWordsInFile(fileName, wc):
 				for word in words:
 					if isValid(word):
 						wc[word]+=1
+
+# Print a debug log message
+def logd(message):
+	if DEBUG:
+		print "[DEBUG] " + str(message)
 
 # Delete the folder with the given full path
 # Unused
